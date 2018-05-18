@@ -1,13 +1,13 @@
 ## TO DO
 ------
-## Graphics
-  Create Player Sprites
-  Create Bullet Sprites
-  Create Map 
-  Create Map Objects
+  ## Graphics
+    Create Player Sprites
+    Create Bullet Sprites
+    Create Map 
+    Create Map Objects
 
-## Client
-  Create Client
+  ## Client
+    Create Client
 
-## Server
-  Create Server
+  ## Server
+    Create Server
