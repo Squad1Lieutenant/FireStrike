@@ -89,9 +89,10 @@ public class Client implements ActionListener, KeyListener {
 		gameMenuAbout.setVisible(true);
 		gameMenuBar.setVisible(true);
 		gameFrame.setVisible(true);
+		
 
 		System.out.println("Connecting...");
-		socket = new Socket("73.15.227.253", 7777);
+		socket = new Socket("localhost", 7777);
 		System.out.println("Connection Successful");
 		in = new DataInputStream(socket.getInputStream());
 		out = new DataOutputStream(socket.getOutputStream());
@@ -150,10 +151,10 @@ class Input implements Runnable {
 	
 	public void run() {
 		while(true) {
-		String message;
-		try {
-		message = in.readUTF();
-		System.out.println(message);
+			String message;
+			try {
+				message = in.readUTF();
+				System.out.println(message);
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
