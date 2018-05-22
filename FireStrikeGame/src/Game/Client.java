@@ -163,7 +163,7 @@ public class Client implements ActionListener, KeyListener, Runnable
 
 		System.out.println("Connecting...");
 
-		socket = new Socket("73.15.227.253", 7777);
+		socket = new Socket("localhost", 7777);
 
 		System.out.println("Connection Successful");
 
