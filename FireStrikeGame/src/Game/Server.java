@@ -3,12 +3,15 @@ package Game;
 import java.io.*;
 
 import java.net.*;
+import java.util.Scanner;
 
 public class Server
 
 {
 
 	private static final int MAX_USERS = 10;
+
+	static Scanner sc;
 
 	static ServerSocket serverSocket;
 
@@ -83,7 +86,7 @@ class Users implements Runnable
 
 	public void run()
 	{
-
+		Scanner sc = new Scanner(System.in);
 		while (true)
 
 		{
@@ -93,7 +96,6 @@ class Users implements Runnable
 			try
 
 			{
-
 				message = in.readUTF();
 
 				for (int i = 0; i < 10; i++)
