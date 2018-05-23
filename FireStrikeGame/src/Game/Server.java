@@ -49,15 +49,17 @@ public class Server
 
 				in = new DataInputStream(socket.getInputStream());
 
-				if (user[i] == null)
+				if (user[i] == null){
 
 					user[i] = new Users(out, in, user);
 
-				Thread thread = new Thread(user[i]);
+					Thread thread = new Thread(user[i]);
 
-				thread.start();
+					thread.start();
 
-				break;
+					break;
+				}
+				}	
 
 			}
 
@@ -65,7 +67,7 @@ public class Server
 
 	}
 
-}
+
 
 class Users implements Runnable
 
@@ -119,9 +121,7 @@ class Users implements Runnable
 			{
 
 				e.printStackTrace();
-
 				this.out = null;
-
 				this.in = null;
 
 			}
