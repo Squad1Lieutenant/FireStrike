@@ -1,104 +1,129 @@
 package Game;
 
-
-
 import java.io.*;
 
 import java.net.*;
+import java.util.Scanner;
 
-import java.util.*;
+public class Server
 
+{
 
+	private static final int MAX_USERS = 10;
 
-public class Client {
+	static Scanner sc;
+
+	static ServerSocket serverSocket;
 
 	static Socket socket;
 
-	static DataInputStream in;
-
 	static DataOutputStream out;
 
-	
+	static DataInputStream in;
 
+	static Users[] user = new Users[MAX_USERS];
 
+	public static void main(String[] args) throws Exception
 
-	public static void main(String[] args) throws Exception {
-		Scanner sc = new Scanner(System.in);
-		System.out.println("Connecting. Enter IP to connect to.");
-		
-		String ip = sc.nextLine();
+	{
 
-		socket = new Socket(ip, 7777);
+		System.out.println("Starting Server...");
 
-		System.out.println("Connection Established");
- 
-		in = new DataInputStream(socket.getInputStream());
+		serverSocket = new ServerSocket(7777);
 
-		out = new DataOutputStream(socket.getOutputStream());
+		System.out.println("Server Started...");
 
-		Input input = new Input(in);
-
-		Thread thread = new Thread(input);
-
-		thread.start();
-		
-		System.out.println("Enter your name: ");
-		
-		String name = sc.nextLine();
-		
-		out.writeUTF(name + " has connected");
-	
-		while(true)
+		while (true)
 
 		{
 
-			String SendMessage = sc.nextLine();
+			socket = serverSocket.accept();
 
-			out.writeUTF(SendMessage);
+			for (int i = 0; i < 10; i++)
+
+			{
+
+				System.out.println("Connection From:" + socket.getInetAddress());
+
+				out = new DataOutputStream(socket.getOutputStream());
+
+				in = new DataInputStream(socket.getInputStream());
+
+				if (user[i] == null){
+
+					user[i] = new Users(out, in, user);
+
+					Thread thread = new Thread(user[i]);
+
+					thread.start();
+
+					break;
+				}
+				}	
+
+			}
 
 		}
 
 	}
 
-}
 
 
+class Users implements Runnable
 
-class Input implements Runnable {
+{
+
+	DataOutputStream out;
 
 	DataInputStream in;
 
+	Users[] user = new Users[10];
 
-
-	public Input(DataInputStream in) {
-
+	public Users(DataOutputStream out, DataInputStream in, Users[] user)
+	{
+		this.out = out;
 		this.in = in;
-
-
-
+		this.user = user;
 	}
 
+	public void run()
+	{
+		String name 
+		Scanner sc = new Scanner(System.in);
+		while (true)
 
-
-	public void run() {
-
-		while (true) {
+		{
 
 			String message;
 
-			try {
+			try
 
+			{
 				message = in.readUTF();
 
-				System.out.println(message);
+				for (int i = 0; i < 10; i++)
 
-			} catch (IOException e) {
+				{
 
-				e.printStackTrace();
+					if (user[i] != null)
+
+					{
+
+						user[i].out.writeUTF(message);
+
+					}
+
+				}
 
 			}
 
+			catch (IOException e)
 
+			{
+				this.out = null;
+				this.in = null;
+
+			}
 
 		}
 
