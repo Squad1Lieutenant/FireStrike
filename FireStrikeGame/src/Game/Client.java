@@ -41,7 +41,12 @@ public class Client {
 		Thread thread = new Thread(input);
 
 		thread.start();
-
+		
+		System.out.println("Enter your name: ");
+		
+		String name = sc.nextLine();
+		
+		out.writeUTF(name + " has connected");
 	
 		while(true)
 
@@ -98,7 +103,5 @@ class Input implements Runnable {
 		}
 
 	}
-
-
 
 }
