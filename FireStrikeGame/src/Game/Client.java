@@ -1,132 +1,104 @@
 package Game;
 
+
+
 import java.io.*;
 
 import java.net.*;
-import java.util.Scanner;
 
-public class Server
+import java.util.*;
 
-{
 
-	private static final int MAX_USERS = 10;
 
-	static Scanner sc;
-
-	static ServerSocket serverSocket;
+public class Client {
 
 	static Socket socket;
 
-	static DataOutputStream out;
-
 	static DataInputStream in;
 
-	static Users[] user = new Users[MAX_USERS];
+	static DataOutputStream out;
 
-	public static void main(String[] args) throws Exception
+	
 
-	{
 
-		System.out.println("Starting Server...");
 
-		serverSocket = new ServerSocket(7777);
+	public static void main(String[] args) throws Exception {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Connecting. Enter IP to connect to.");
+		
+		String ip = sc.nextLine();
 
-		System.out.println("Server Started...");
+		socket = new Socket(ip, 7777);
 
-		while (true)
+		System.out.println("Connection Established");
+ 
+		in = new DataInputStream(socket.getInputStream());
+
+		out = new DataOutputStream(socket.getOutputStream());
+
+		Input input = new Input(in);
+
+		Thread thread = new Thread(input);
+
+		thread.start();
+
+	
+		while(true)
 
 		{
 
-			socket = serverSocket.accept();
+			String SendMessage = sc.nextLine();
 
-			for (int i = 0; i < 10; i++)
-
-			{
-
-				System.out.println("Connection From:" + socket.getInetAddress());
-
-				out = new DataOutputStream(socket.getOutputStream());
-
-				in = new DataInputStream(socket.getInputStream());
-
-				if (user[i] == null){
-
-					user[i] = new Users(out, in, user);
-
-					Thread thread = new Thread(user[i]);
-
-					thread.start();
-
-					break;
-				}
-				}	
-
-			}
+			out.writeUTF(SendMessage);
 
 		}
 
 	}
 
+}
 
 
-class Users implements Runnable
 
-{
-
-	DataOutputStream out;
+class Input implements Runnable {
 
 	DataInputStream in;
 
-	Users[] user = new Users[10];
 
-	public Users(DataOutputStream out, DataInputStream in, Users[] user)
-	{
-		this.out = out;
+
+	public Input(DataInputStream in) {
+
 		this.in = in;
-		this.user = user;
+
+
+
 	}
 
-	public void run()
-	{
-		String name 
-		Scanner sc = new Scanner(System.in);
-		while (true)
 
-		{
+
+	public void run() {
+
+		while (true) {
 
 			String message;
 
-			try
+			try {
 
-			{
 				message = in.readUTF();
 
-				for (int i = 0; i < 10; i++)
+				System.out.println(message);
 
-				{
+			} catch (IOException e) {
 
-					if (user[i] != null)
-
-					{
-
-						user[i].out.writeUTF(message);
-
-					}
-
-				}
+				e.printStackTrace();
 
 			}
 
-			catch (IOException e)
 
-			{
-				this.out = null;
-				this.in = null;
-
-			}
 
 		}
 
 	}
+
+
 
 }
