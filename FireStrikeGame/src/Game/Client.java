@@ -23,8 +23,12 @@ public class Client {
 
 
 	public static void main(String[] args) throws Exception {
+		
 		Scanner sc = new Scanner(System.in);
+		
 		System.out.println("Connecting. Enter IP to connect to.");
+		
+		String name;
 		
 		String ip = sc.nextLine();
 
@@ -42,7 +46,12 @@ public class Client {
 
 		thread.start();
 
-	
+		System.out.println("Enter Your Name: ");
+		
+		name = sc.nextLine();
+		
+		out.writeUTF(name);
+		
 		while(true)
 
 		{
