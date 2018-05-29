@@ -49,7 +49,8 @@ public class Server
 
 				in = new DataInputStream(socket.getInputStream());
 
-				if (user[i] == null){
+				if (user[i] == null)
+				{
 
 					user[i] = new Users(out, in, user);
 
@@ -59,15 +60,13 @@ public class Server
 
 					break;
 				}
-				}	
-
 			}
 
 		}
 
 	}
 
-
+}
 
 class Users implements Runnable
 
@@ -78,6 +77,8 @@ class Users implements Runnable
 	DataInputStream in;
 
 	Users[] user = new Users[10];
+	
+	String name;
 
 	public Users(DataOutputStream out, DataInputStream in, Users[] user)
 	{
@@ -88,7 +89,15 @@ class Users implements Runnable
 
 	public void run()
 	{
-		Scanner sc = new Scanner(System.in);
+		try
+		{
+			name = in.readUTF();
+		}
+		catch (IOException e1)
+		{
+		e1.printStackTrace();
+		}
+		
 		while (true)
 
 		{
@@ -108,7 +117,7 @@ class Users implements Runnable
 
 					{
 
-						user[i].out.writeUTF(message);
+						user[i].out.writeUTF(name + ": "  + message);
 
 					}
 
@@ -120,7 +129,7 @@ class Users implements Runnable
 
 			{
 
-				e.printStackTrace();
+
 				this.out = null;
 				this.in = null;
 
