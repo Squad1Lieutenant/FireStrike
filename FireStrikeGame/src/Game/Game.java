@@ -26,7 +26,7 @@ public class Game implements ActionListener, KeyListener
 	private static JFrame gameFrame;
 	private static JButton playGame, exit, enterIPButton;
 	private static JLabel mainMenuLabel, enterIPLabel;
-	private static String ip;
+	private static String ip = "0.0.0.0";
 	private static JTextField enterIP;
 	static Socket socket;
 	static DataInputStream in;
@@ -37,8 +37,6 @@ public class Game implements ActionListener, KeyListener
 	private static int trooperX = 400, trooperY = 400, timerspeed = 5;
 	private static KeyEvent event;
 	private static ActionListener event1;
-	
-	
 
 	public static void main(String[] Args) throws Exception
 	{
@@ -58,6 +56,7 @@ public class Game implements ActionListener, KeyListener
 		gameFrame.setFocusable(true);
 		gameFrame.getContentPane().setBackground(new Color(0, 255, 135));
 		gameFrame.setLayout(null);
+		gameFrame.addKeyListener(this);
 
 		// Create the character class "Trooper"
 		lblTrooper = new JLabel(imgTrooper);
@@ -66,7 +65,6 @@ public class Game implements ActionListener, KeyListener
 		lblTrooper.setFont(new Font("Comic Sans MS", Font.BOLD, 40));
 		gameFrame.add(lblTrooper);
 		lblTrooper.setVisible(false);
-		
 
 		// The "Play Game" Button
 		playGame = new JButton("Play Game");
@@ -120,9 +118,17 @@ public class Game implements ActionListener, KeyListener
 		enterIPButton.setVisible(false);
 
 		gameFrame.setVisible(true);
-		
-		Timer timer = new Timer(5, this);
-		timer.start();
+
+		//Timer timer = new Timer(5, this);
+		//timer.start();
+	}
+
+	public static void playGame() throws Exception
+	{
+		enterIP.setVisible(false);
+		enterIPLabel.setVisible(false);
+		enterIPButton.setVisible(false);
+		lblTrooper.setVisible(true);
 	}
 
 	public static void enterIP()
@@ -135,7 +141,7 @@ public class Game implements ActionListener, KeyListener
 	public static void connect() throws Exception
 	{
 
-		socket = new Socket(ip, 7777);
+		socket = new Socket("10.70.4.117", 7777);
 
 		System.out.println("Connection Established");
 
@@ -148,6 +154,9 @@ public class Game implements ActionListener, KeyListener
 		Thread thread = new Thread(input);
 
 		thread.start();
+
+		playGame();
+
 	}
 
 	public static void game() throws Exception
@@ -156,44 +165,46 @@ public class Game implements ActionListener, KeyListener
 		enterIPLabel.setVisible(false);
 		enterIPButton.setVisible(false);
 		lblTrooper.setVisible(true);
-		gameFrame.addKeyListener(new Game());
-
 	}
 
 	public void actionPerformed(ActionEvent event)
 	{
 		if (event.getActionCommand().equals("exit"))
+		{
 			System.exit(0);
-
+		}
 		if (event.getActionCommand().equals("playgame"))
 		{
 			playGame.setVisible(false);
 			exit.setVisible(false);
 			mainMenuLabel.setVisible(false);
 			enterIP();
-
 		}
 
 		if (event.getActionCommand().equals("enterip"))
 		{
-			// ip = enterIPButton.getText();
-			// try {
-			// connect();
-			// } catch (Exception e) {
-			// e.printStackTrace();
-			// }
-
+			ip = enterIPButton.getText();
 			try
 			{
-				game();
+				connect();
 			}
 			catch (Exception e)
 			{
+				e.printStackTrace();
+			}
+
+			try
+			{
+				playGame();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
 			}
 		}
 
 	}
-	
+
 	public void actionPerformed1(ActionEvent event1)
 	{
 		System.out.println("Test");
@@ -204,8 +215,25 @@ public class Game implements ActionListener, KeyListener
 	{
 		if (event.getKeyCode() == KeyEvent.VK_UP)
 		{
-			trooperY -= 10;
-			lblTrooper.setLocation(trooperX, trooperY);
+			//trooperY -= 10;
+			try
+			{
+				out.writeInt(lblTrooper.getY());
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+
+			try
+			{
+				lblTrooper.setLocation(trooperX, in.readInt());
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+
 		}
 		if (event.getKeyCode() == KeyEvent.VK_DOWN)
 		{
