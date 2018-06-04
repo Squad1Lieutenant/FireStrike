@@ -102,13 +102,19 @@ class Users implements Runnable
 
 		{
 
-			String message;
+			int commandW;
+			int commandS;
+			String commandHealth;
+			String commandShoot;
 
 			try
 
 			{
-				message = in.readUTF();
-
+				commandW = in.readInt() - 5;
+				commandS = in.readInt() + 5;
+				commandShoot = in.readUTF();
+				commandHealth = in.readUTF();
+							
 				for (int i = 0; i < 10; i++)
 
 				{
@@ -116,9 +122,11 @@ class Users implements Runnable
 					if (user[i] != null)
 
 					{
-
-						user[i].out.writeUTF(name + ": "  + message);
-
+						
+						user[i].out.writeInt(commandW);
+						user[i].out.writeInt(commandS);
+						//user[i].out.writeUTF(str);
+						//user[i].out.writeUTF(str);
 					}
 
 				}
