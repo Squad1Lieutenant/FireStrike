@@ -79,6 +79,8 @@ class Users implements Runnable
 	Users[] user = new Users[10];
 	
 	String name;
+	
+	
 
 	public Users(DataOutputStream out, DataInputStream in, Users[] user)
 	{
@@ -88,10 +90,13 @@ class Users implements Runnable
 	}
 
 	public void run()
+	
 	{
+		
 		try
 		{
 			name = in.readUTF();
+
 		}
 		catch (IOException e1)
 		{
@@ -103,18 +108,13 @@ class Users implements Runnable
 		{
 
 			int commandW;
-			int commandS;
-			String commandHealth;
-			String commandShoot;
-
+			
 			try
 
 			{
-				commandW = in.readInt() - 5;
-				commandS = in.readInt() + 5;
-				commandShoot = in.readUTF();
-				commandHealth = in.readUTF();
-							
+				commandW = Integer.parseInt(in.readUTF());
+				
+				
 				for (int i = 0; i < 10; i++)
 
 				{
@@ -122,11 +122,12 @@ class Users implements Runnable
 					if (user[i] != null)
 
 					{
+						System.out.println("Recieved player Y: " + commandW);
+						commandW -=5;
 						
-						user[i].out.writeInt(commandW);
-						user[i].out.writeInt(commandS);
-						//user[i].out.writeUTF(str);
-						//user[i].out.writeUTF(str);
+						System.out.println(commandW);
+						user[i].out.writeUTF(Integer.toString(commandW));
+						
 					}
 
 				}
