@@ -29,7 +29,7 @@ public class Server
 
 		System.out.println("Starting Server...");
 
-		serverSocket = new ServerSocket(8888);
+		serverSocket = new ServerSocket(7777);
 
 		System.out.println("Server Started...");
 
