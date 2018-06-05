@@ -22,7 +22,7 @@ import javax.swing.Timer;
 
 public class Game implements ActionListener, KeyListener
 {
-	private static final int TIMER_DELAY = 0;
+	private static final int TIMER_SPEED = 5;
 	private static JFrame gameFrame;
 	private static JButton playGame, exit, enterIPButton;
 	private static JLabel mainMenuLabel, enterIPLabel;
@@ -34,7 +34,7 @@ public class Game implements ActionListener, KeyListener
 
 	private static ImageIcon imgTrooper = new ImageIcon(Game.class.getResource("TrooperInGame.png"));
 	private static JLabel lblTrooper = new JLabel(imgTrooper);
-	private static int trooperX = 400, trooperY = 400, timerspeed = 5;
+	private int trooperX = 400, trooperY = 400, timerspeed = 5, CommandW = 0;
 	private static KeyEvent event;
 	private static ActionListener event1;
 
@@ -119,8 +119,9 @@ public class Game implements ActionListener, KeyListener
 
 		gameFrame.setVisible(true);
 
-		//Timer timer = new Timer(5, this);
-		//timer.start();
+		Timer timer = new Timer(TIMER_SPEED, this);
+		timer.setActionCommand("timer");
+		timer.start();
 	}
 
 	public static void playGame() throws Exception
@@ -141,7 +142,7 @@ public class Game implements ActionListener, KeyListener
 	public static void connect() throws Exception
 	{
 
-		socket = new Socket("10.70.4.117", 7777);
+		socket = new Socket("10.70.4.118", 7777);
 
 		System.out.println("Connection Established");
 
@@ -155,6 +156,8 @@ public class Game implements ActionListener, KeyListener
 
 		thread.start();
 
+		
+		
 		playGame();
 
 	}
@@ -202,53 +205,56 @@ public class Game implements ActionListener, KeyListener
 				e.printStackTrace();
 			}
 		}
+		
+		if (event.getActionCommand().equals("timer"))
+		{
+			try
+			{
+				CommandW = Integer.parseInt(in.readUTF());
+				lblTrooper.setLocation(trooperX, CommandW);
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
 
-	}
-
-	public void actionPerformed1(ActionEvent event1)
-	{
-		System.out.println("Test");
 	}
 
 	@Override
 	public void keyPressed(KeyEvent event)
 	{
+		
+		
 		if (event.getKeyCode() == KeyEvent.VK_UP)
 		{
 			//trooperY -= 10;
 			try
 			{
-				out.writeInt(lblTrooper.getY());
+				out.writeUTF(Integer.toString(lblTrooper.getY()));
 			}
 			catch (IOException e)
 			{
 				e.printStackTrace();
 			}
 
-			try
-			{
-				lblTrooper.setLocation(trooperX, in.readInt());
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
+			
 
 		}
 		if (event.getKeyCode() == KeyEvent.VK_DOWN)
 		{
-			trooperY += 10;
-			lblTrooper.setLocation(trooperX, trooperY);
+			//trooperY += 10;
+			lblTrooper.setLocation(trooperX, CommandW);
 		}
 		if (event.getKeyCode() == KeyEvent.VK_LEFT)
 		{
-			trooperX -= 10;
-			lblTrooper.setLocation(trooperX, trooperY);
+			//trooperX -= 10;
+			lblTrooper.setLocation(trooperX, CommandW);
 		}
 		if (event.getKeyCode() == KeyEvent.VK_RIGHT)
 		{
-			trooperX += 10;
-			lblTrooper.setLocation(trooperX, trooperY);
+			//trooperX += 10;
+			lblTrooper.setLocation(trooperX, CommandW);
 		}
 	}
 
