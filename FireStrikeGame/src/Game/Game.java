@@ -13,7 +13,7 @@ public class Game implements Runnable, KeyListener, ActionListener {
 	private static JFrame gameFrame;
 	private static JButton playGame, exit, enterIPButton;
 	private static JLabel mainMenuLabel, enterIPLabel;
-	private static String ip = "0.0.0.0";
+	private static String ip = "";
 	private static JTextField enterIP;
 	private static ImageIcon imgTrooper = new ImageIcon(Game.class.getResource("TrooperInGame.png"));
 	private static JLabel lblTrooper = new JLabel(imgTrooper);
@@ -34,7 +34,7 @@ public class Game implements Runnable, KeyListener, ActionListener {
 	int playerx;
 	int playery;
 
-	public void main(String [] args) {
+	public static void main(String [] args) {
 		new Game();
 		
 	}
@@ -119,20 +119,31 @@ public class Game implements Runnable, KeyListener, ActionListener {
 				timer.start();
 	}
 	
-	public static void connect()
+	public static void getIP() 
+	{
+		mainMenuLabel.setVisible(false);
+		exit.setVisible(false);
+		playGame.setVisible(false);
+		enterIPButton.setVisible(true);
+		enterIP.setVisible(true);
+		enterIPLabel.setVisible(true);
+		ip = enterIPLabel.getText();
+		
+		
+	}
+	public void connect()
 	{
 		try {
-
-			System.out.println("Connecting. Enter IP to connect to.");
+			
 			socket = new Socket("localhost", 7777);
 			System.out.println("Connection Established");
 			in = new DataInputStream(socket.getInputStream());
 			playerid = in.readInt();
 			out = new DataOutputStream(socket.getOutputStream());
-			Input input = new Input(in, new Game());
+			Input input = new Input(in, this);
 			Thread thread = new Thread(input);
 			thread.start();
-			Thread thread2 = new Thread(new Game());
+			Thread thread2 = new Thread(this);
 			thread2.start();
 			
 			
@@ -229,8 +240,21 @@ public class Game implements Runnable, KeyListener, ActionListener {
 	
 
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		if (e.getActionCommand().equals("exit")) 
+		{
+			gameFrame.dispose();
+			System.exit(0);
+		}
 		
+		if (e.getActionCommand().equals("playgame"))
+		{
+			getIP();
+		}
+		
+		if (e.getActionCommand().equals("enterip"))
+		{
+			connect();
+		}
 	}
 }
 
