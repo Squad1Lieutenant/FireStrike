@@ -52,7 +52,7 @@ public class Server
 				if (user[i] == null)
 				{
 
-					user[i] = new Users(out, in, user);
+					user[i] = new Users(out, in, user, i);
 
 					Thread thread = new Thread(user[i]);
 

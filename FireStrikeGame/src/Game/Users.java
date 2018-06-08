@@ -1,8 +1,8 @@
 package Game;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.net.*;
+import java.io.*;
+
 
 class Users implements Runnable
 
@@ -13,36 +13,51 @@ class Users implements Runnable
 	DataInputStream in;
 
 	Users[] user = new Users[10];
-
+	
 	String name;
 
-	public Users(DataOutputStream out, DataInputStream in, Users[] user) {
+	int playerid;
+	
+	int playeridin;
+	
+	int xin;
+	
+	int yin;
+	
+	
+	public Users(DataOutputStream out, DataInputStream in, Users[] user, int pid)
+	{
 		this.out = out;
 		this.in = in;
 		this.user = user;
+		this.playerid = pid;
+		
+		
 	}
 
 	public void run()
-
 	{
-
-		try {
-			name = in.readUTF();
-
-		} catch (IOException e1) {
-			e1.printStackTrace();
+		try
+		{
+			out.writeInt(playerid);
 		}
-
+		catch (IOException e1)
+		{
+		e1.printStackTrace();
+		}
+		
 		while (true)
 
 		{
 
-			int commandW;
+			String message;
 
 			try
 
 			{
-				commandW = Integer.parseInt(in.readUTF());
+				playeridin = in.readInt();
+				xin = in.readInt();
+				yin = in.readInt();
 
 				for (int i = 0; i < 10; i++)
 
@@ -51,12 +66,10 @@ class Users implements Runnable
 					if (user[i] != null)
 
 					{
-						System.out.println("Recieved player Y: " + commandW);
-						commandW -= 5;
 
-						System.out.println(commandW);
-						user[i].out.writeUTF(Integer.toString(commandW));
-
+						user[i].out.writeInt(playeridin);
+						user[i].out.writeInt(xin);
+						user[i].out.writeInt(yin);
 					}
 
 				}
@@ -66,13 +79,13 @@ class Users implements Runnable
 			catch (IOException e)
 
 			{
-
-				this.out = null;
-				this.in = null;
+				user[playerid] = null;
+				
 
 			}
 
 		}
+
 	}
 
 }
